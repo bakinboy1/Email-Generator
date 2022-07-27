@@ -1,0 +1,208 @@
+package emailer;
+
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import javax.swing.JTextArea;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JLabel;
+
+
+public class Console extends JFrame {
+	public String fieldString;
+	FileWriter f;
+
+	private static final long serialVersionUID = 1L;
+
+	private JPanel contentPane;
+
+	JTextField txtInput = new JTextField("a");
+
+	public void printTextField(String text) {
+		textField.setText(text);
+	}
+
+	public String script = "Welcome to the hardware refresh list email generator\n\n"
+
+			+ "In order to link your file to this program, go to the excel file location in your file explorer\n"
+			+ "Hold down shift and right click the file. From there click 'copy as path' and paste it into the field below.\n\n"
+			+ "Excel files must have following structure to properly work with program:\r\n" + 
+			"Serial,	First Name,	Last Name,	Location,	completed\r\n" + 
+			"\r\n" + 
+			"\r\n" + 
+			"the completed column should be left blank until that person's computer has been replaced.\r\n\n"
+			+ "Paste the file path into the field below --Set File Path-- and hit enter\n\n";
+	private JTextField textField;
+	public String content;
+
+	public Console() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 587, 450);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		JButton btnStartProgram = new JButton("Start Program");
+
+		// create text area
+		JTextArea textArea = new JTextArea();
+
+		// get text file content
+		try {
+			content = new String(Files.readAllBytes(Paths.get("filepath.txt")));
+		} catch (IOException e1) {
+			content = null;
+		}
+
+		// print script to text area
+		if (content != null) {
+
+			textArea.setText(script + "\n---your filepath is: " + content);
+		} else {
+			textArea.setText(script);
+		}
+
+		// create text field
+		textField = new JTextField();
+		textField.setColumns(10);
+
+		// create action listener to do function when enter is pressed
+		/////////
+		textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				// get string from text field
+				fieldString = textField.getText();
+
+				// remove " from string input
+				fieldString = fieldString.replace("\"", "");
+				String entry = "\n--your filepath is: " + fieldString;
+
+				// 'modified' variable used to keep display as script + 1 entry, vs having
+				// entries pile up
+				String modified = script + entry;
+
+				// print out full script plus entry
+				textArea.setText(modified);
+
+				// set the name of the filepath variable to the user entry
+				if (fieldString != null || fieldString != "") {
+					FileName.setPath(fieldString);
+				}
+
+				// move fieldString value to fileName value in Main
+				// check if valid
+				// return error message if not valid, prompting them to enter path again
+				// if valid, set as fileName path
+				// when person clicks 'launch program' the console window closes
+			}
+		});
+		///////
+
+		// .ISSUES.
+		// prevent people from typing in jtextfield
+		// .ISSUES.
+
+		btnStartProgram.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// put whatever is in textfield into fieldstring variable in case they forget to
+				// hit enter, or dont type anything and want to use previous entry
+				fieldString = textField.getText();
+
+
+				// get string from text field if it is not empty
+				if (fieldString.length() > 2) {
+					fieldString = fieldString.replace("\"", "");
+					// if fieldString is not empty, copy contents to txt file
+					try {
+						PrintWriter writer = new PrintWriter("filepath.txt");
+						writer.print(fieldString);
+						writer.close();
+						FileName.setPath(content);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+
+				// if content is not empty, try to use it for function
+				if (content.length() > 2) {
+					// get text file content
+					try {
+						
+						content = new String(Files.readAllBytes(Paths.get("filepath.txt")));
+						FileName.setPath(content);
+					} catch (IOException e1) {
+						content = null;
+					}
+					// set value of filepath as 'content' string which is read from filepath.txt
+					
+
+					// pulls file data from given filepath
+					Main.main.gogo();
+
+					// puts file data into array
+					WindowGui.frame.fill(Arr.getArr());
+
+					// runs second window
+					WindowGui.frame.run();
+
+				}
+				// if entry text field and txt doc are empty, nothing happens until they type
+				// something in
+				else {
+					return;
+				}
+
+			}
+		});
+
+		JLabel lblFilePath = new JLabel("Set File Path");
+//autogenerated mumbo jumbo
+		GroupLayout gl_contentPane = new GroupLayout(contentPane);
+		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
+				.createSequentialGroup()
+				.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap().addComponent(textArea, 0, 0,
+								Short.MAX_VALUE))
+						.addGroup(Alignment.LEADING,
+								gl_contentPane.createSequentialGroup().addGap(261).addComponent(lblFilePath))
+						.addGroup(Alignment.LEADING,
+								gl_contentPane.createSequentialGroup().addGap(241).addComponent(btnStartProgram))
+						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup().addGap(10)
+								.addComponent(textField, GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)))
+				.addContainerGap()));
+		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+						.addComponent(textArea, GroupLayout.PREFERRED_SIZE, 291, GroupLayout.PREFERRED_SIZE).addGap(18)
+						.addComponent(lblFilePath).addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+								GroupLayout.PREFERRED_SIZE)
+						.addGap(11).addComponent(btnStartProgram).addContainerGap(18, Short.MAX_VALUE)));
+		contentPane.setLayout(gl_contentPane);
+
+	}
+
+	public static void run2() {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Console frame = new Console();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+}
