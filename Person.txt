@@ -1,0 +1,128 @@
+package emailer;
+
+public class Person {
+	private String fName, lName, serialNum, location, isDone;
+
+	// default constructor
+	public Person() {
+		fName = "default";
+		lName = "default";
+		serialNum = "0";
+		location = "nowhere";
+		isDone = "";
+	}
+
+	public Person(String serialNum1, String fName1, String lName1, String location1, String isDone1) {
+		this.fName = fName1;
+		this.lName = lName1;
+		this.serialNum = serialNum1;
+		this.location = location1;
+		this.isDone = isDone1;
+	}
+
+	// set first name
+	public void setFirst(String newFirst) {
+		this.fName = newFirst;
+	}
+
+	// get first name
+	public String getFirst() {
+		return fName;
+	}
+
+	////////
+	// set last name
+	public void setLast(String newLast) {
+		this.lName = newLast;
+	}
+
+	// get last name
+	public String getLast() {
+		return lName;
+	}
+
+	/////////
+	// set serial number
+	public void setSerial(String newSerial) {
+		this.serialNum = newSerial;
+	}
+
+	// get serial number
+	public String getSerial() {
+		return serialNum;
+	}
+
+	/////////
+	// set location
+	public void setLocation(String newLocation) {
+		this.location = newLocation;
+	}
+
+	// get location
+	public String getLocation() {
+		return location;
+	}
+
+	// set done
+	public void setDone(String newDone) {
+		this.isDone = newDone;
+	}
+
+	// get done
+	public String getDone() {
+		return isDone;
+	}
+
+	@Override
+	public String toString() {
+		return ("Serial: " + serialNum + " |  Name: " + fName + " " + lName + " |          " + location + "\n\n");
+	}
+
+	public String label() {
+		return " Name:                    " + fName + " " + lName + "                 done: " + isDone + "\n";
+	}
+
+	public String getEmail() {
+		String fLetter = Character.toString(fName.charAt(0));
+		return (fLetter + lName + "@aflac.com");
+	}
+
+	///////////
+	// script///
+	///////////
+	public String printScript() {
+		return "Hello " + fName + " " + lName + ",\n\n" +
+
+				"Your computer has been flagged for security vulnerabilities and is eligible for replacement with our hardware refresh program.\n"
+				+ "Please send your location and a day/time that is convenient for us to come by and switch your computer.\n"
+				+ "The following steps will help make the replacement process go quickly and smoothly.\n\n"
+				+ "•	List any software that you have that will need to be installed besides the standard Microsoft suite.\n\n"
+				+ "•	Please verify that this serial # matches with the one on the computer you are currently using\n\n"
+				+ "•	Backup Files – Copy any files that you need to your personal Network F Drive .\n\n"
+				+ "# Go to “My Computer” -- Windows (C:) drive --Users --select your E number\n"
+				+ "# Hold down [CTRL + left click] to select Contacts, Desktop, Favorites, My Documents, along with any other personal files/folders you will want to transfer\r\n"
+				+ "# Once all desired items are highlighted type[CTRL + C] to copy the selected items\r\n"
+				+ "# Go to your F drive and create a folder on your F drive labeled ‘Win10 Backup’\n"
+				+ "# Open the folder (it should be empty) and type [CTRL + V]. This will paste all your needed personal files into the backup folder\n\n\n"
+				+ "Serial #: " + serialNum + "\n\n" +
+
+				"Location: " + location + "\n\n" +
+
+				"If you need any assistance or have any questions, we’ll be more than happy to help. \n"
+				+ "We look forward to hearing back from you soon.";
+	}
+}
+
+//
+//# //insert data from Access into pre-written script
+//# //excel files= .xlsx
+//# //let program talk to excel 
+//# //let program pull data and assign it to fName, lName, serialNum in the script
+//# //program goes by id# and pulls all data from row to assign
+//# //program skips rows where "completed" is true
+//
+//# //program displays list of names
+//# //names can be selected
+//# //users can select x amount of names to generate emails for
+//# //program automatically opens outlook and pastes message with pulled data. generates a new email draft for each person
+

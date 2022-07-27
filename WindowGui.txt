@@ -1,0 +1,132 @@
+package emailer;
+
+//////////////////////////////////////////////
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+public class WindowGui extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private JPanel contentPane;
+
+	/**
+	 * Launch the application.
+	 */
+
+	/**
+	 * Create the frame.
+	 */
+
+	DefaultListModel<Person> listModel = new DefaultListModel<>();
+
+	public WindowGui() {
+
+		JList<Person> list = new JList<Person>(listModel);
+		list.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent ev) {
+
+			}
+		});
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 693, 720);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+		setContentPane(contentPane);
+		getContentPane().setLayout(new BorderLayout(0, 0));
+
+		JButton button = new JButton("Generate Email");
+		button.setFont(new Font("Tahoma", Font.PLAIN, 12));
+
+		button.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent arg0) {
+				// create temporary array to get index values from Jlist selecion
+				int[] temp = new int[] {};
+
+				// assign array to clone jlist selection values;
+				temp = list.getSelectedIndices().clone();
+
+				// gets int values of index positions (15, 5 ,399 etc.)
+				java.util.Arrays.toString(temp);
+
+				for (int i = 0; i < temp.length; i++) {
+					String body = Arr.getArr().getList().get(temp[i]).printScript();
+					String mailer = Arr.getArr().getList().get(temp[i]).getEmail();
+					String subject = "IT desktop support services- computer replacement";
+					try {
+						URI msg = new URI("mailto", mailer + "&subject=" + subject + "?body=" + body, (String) null);
+
+						Desktop.getDesktop().mail(msg);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (URISyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
+
+			}
+		});
+
+		getContentPane().add(button, BorderLayout.SOUTH);
+		JScrollPane scrollPane = new JScrollPane(list);
+		getContentPane().add(scrollPane, BorderLayout.CENTER);
+
+		JLabel lblSelectPeople = new JLabel("Select Person(s)");
+		lblSelectPeople.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblSelectPeople.setHorizontalAlignment(SwingConstants.CENTER);
+		scrollPane.setColumnHeaderView(lblSelectPeople);
+
+	}
+
+	// needs to be variable 'a' from Main class
+	public void fill(Arr a) {
+		for (int i = 0; i < a.getList().size(); i++) {
+			listModel.addElement(a.getList().get(i));
+		}
+	}
+
+	// create window
+	public static WindowGui frame = new WindowGui();
+
+	public void run() {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					frame.setVisible(true);
+					frame.getContentPane().setSize(800, 400);
+					frame.setBounds(700, 200, 630, 600);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+}
+///////////
